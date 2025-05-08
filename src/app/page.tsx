@@ -175,21 +175,15 @@ export default function Home() {
 
   // Helper to split the AI response by clear section headers
   function splitSummarySections(text: string) {
-    const top5Idx = text.indexOf('Top 5 Recommendations:');
-    const addlIdx = text.indexOf('Additional Opportunities:');
-    // Support both 'Summary:' and 'In conclusion,' as possible summary headers
-    const summaryIdx = text.indexOf('In conclusion,') !== -1
-      ? text.indexOf('In conclusion,')
-      : text.indexOf('Summary:');
+    // Use regex to match section headers, case-insensitive and flexible with whitespace
+    const top5Match = text.match(/Top 5 Recommendations:[\s\S]*?(?=Additional Opportunities:|$)/i);
+    const addlMatch = text.match(/Additional Opportunities:[\s\S]*?(?=In summary,|In conclusion,|Summary:|$)/i);
+    const summaryMatch = text.match(/(In summary,|In conclusion,|Summary:)[\s\S]*/i);
 
-    const intro = top5Idx !== -1 ? text.slice(0, top5Idx).trim() : '';
-    const top5 = (top5Idx !== -1 && addlIdx !== -1)
-      ? text.slice(top5Idx + 'Top 5 Recommendations:'.length, addlIdx).trim()
-      : '';
-    const addl = (addlIdx !== -1 && summaryIdx !== -1)
-      ? text.slice(addlIdx + 'Additional Opportunities:'.length, summaryIdx).trim()
-      : '';
-    const summary = summaryIdx !== -1 ? text.slice(summaryIdx).trim() : '';
+    const intro = text.split(/Top 5 Recommendations:/i)[0]?.trim() || '';
+    const top5 = top5Match ? top5Match[0].replace(/Top 5 Recommendations:/i, '').trim() : '';
+    const addl = addlMatch ? addlMatch[0].replace(/Additional Opportunities:/i, '').trim() : '';
+    const summary = summaryMatch ? summaryMatch[0].trim() : '';
 
     return { intro, top5, addl, summary };
   }
