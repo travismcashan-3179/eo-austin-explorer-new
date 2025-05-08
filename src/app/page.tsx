@@ -195,8 +195,8 @@ export default function Home() {
   // Helper to parse numbered lists into [{title, desc}]
   function parseList(block: string) {
     if (!block) return [];
-    // Split on lines that start with a number and a period
-    const items = block.split(/\n\d+\.\s/).filter(Boolean);
+    // Split on lines that start with a number and a period, parenthesis, or dash, with optional spaces
+    const items = block.split(/\n\s*\d+[\.|\)|-]\s*/).filter(Boolean);
     return items.map(item => {
       const dashIdx = item.indexOf(' - ');
       const colonIdx = item.indexOf(': ');
