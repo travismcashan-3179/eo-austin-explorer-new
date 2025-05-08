@@ -421,7 +421,7 @@ export default function Home() {
           <StepProgress />
           <h1 className={headingClass}>Quick Quiz</h1>
           <form className="flex flex-col gap-5" onSubmit={e => { e.preventDefault(); setStep(3); }}>
-            {quizQuestions.map((q, idx) => (
+            {quizQuestions.map((q) => (
               <div key={q.name} className="flex flex-col gap-1">
                 <label className={labelClass} htmlFor={q.name}>{q.question}</label>
                 {q.options.length > 0 ? (
@@ -480,7 +480,7 @@ export default function Home() {
               const { top5, addl, summary: closing } = splitSummarySections(lastRawAI);
               const top5List = parseList(top5);
               const addlList = parseList(addl);
-              const { emailBody } = getShareContent(top5List, addlList, profile, quiz);
+              getShareContent(top5List, addlList, profile, quiz);
               return (
                 <div className="flex flex-col gap-6">
                   <div>
@@ -548,11 +548,11 @@ export default function Home() {
           const { top5, addl } = splitSummarySections(lastRawAI || '');
           const top5List = parseList(top5);
           const addlList = parseList(addl);
-          const { emailBody } = getShareContent(top5List, addlList, profile, quiz);
+          getShareContent(top5List, addlList, profile, quiz);
           return (
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
               <a
-                href={`mailto:?subject=My EO Roadmap Recommendations&body=${emailBody}`}
+                href={`mailto:?subject=My EO Roadmap Recommendations&body=${getShareContent(top5List, addlList, profile, quiz).emailBody}`}
                 className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg text-base transition shadow focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
                 target="_blank"
                 rel="noopener noreferrer"
