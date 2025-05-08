@@ -308,8 +308,8 @@ export default function Home() {
   function getShareContent(
     top5List: Array<{ title: string; desc: string }>,
     addlList: Array<{ title: string; desc: string }>,
-    profile: any,
-    quiz: any
+    profile: { name: string; company: string; revenue: string },
+    quiz: { [key: string]: string }
   ) {
     // Email: Recap with profile, quiz, and recommendations
     let emailBody = 'Here are my personalized EO recommendations from the EO Roadmap tool:%0D%0A%0D%0A';
@@ -324,14 +324,14 @@ export default function Home() {
     emailBody += '%0D%0A';
     if (top5List.length > 0) {
       emailBody += 'Top 5 Recommendations:%0D%0A';
-      top5List.forEach((item: { title: string; desc: string }, idx: number) => {
+      top5List.forEach((item, idx) => {
         emailBody += `${idx + 1}. ${item.title}: ${item.desc}%0D%0A`;
       });
       emailBody += '%0D%0A';
     }
     if (addlList.length > 0) {
       emailBody += 'Additional Opportunities:%0D%0A';
-      addlList.forEach((item: { title: string; desc: string }, idx: number) => {
+      addlList.forEach((item, idx) => {
         emailBody += `${top5List.length + idx + 1}. ${item.title}: ${item.desc}%0D%0A`;
       });
     }
