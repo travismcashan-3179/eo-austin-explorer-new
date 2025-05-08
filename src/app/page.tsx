@@ -175,19 +175,21 @@ export default function Home() {
 
   // Helper to split the AI response by clear section headers
   function splitSummarySections(text: string) {
-    // Find the index of each section header
     const top5Idx = text.indexOf('Top 5 Recommendations:');
     const addlIdx = text.indexOf('Additional Opportunities:');
-    const summaryIdx = text.indexOf('Summary:');
+    // Support both 'Summary:' and 'In conclusion,' as possible summary headers
+    const summaryIdx = text.indexOf('In conclusion,') !== -1
+      ? text.indexOf('In conclusion,')
+      : text.indexOf('Summary:');
 
-    // Introduction is everything before Top 5
     const intro = top5Idx !== -1 ? text.slice(0, top5Idx).trim() : '';
-    // Top 5 is everything between Top 5 and Additional Opportunities
-    const top5 = (top5Idx !== -1 && addlIdx !== -1) ? text.slice(top5Idx + 'Top 5 Recommendations:'.length, addlIdx).trim() : '';
-    // Additional is everything between Additional Opportunities and Summary
-    const addl = (addlIdx !== -1 && summaryIdx !== -1) ? text.slice(addlIdx + 'Additional Opportunities:'.length, summaryIdx).trim() : '';
-    // Summary is everything after Summary:
-    const summary = summaryIdx !== -1 ? text.slice(summaryIdx + 'Summary:'.length).trim() : '';
+    const top5 = (top5Idx !== -1 && addlIdx !== -1)
+      ? text.slice(top5Idx + 'Top 5 Recommendations:'.length, addlIdx).trim()
+      : '';
+    const addl = (addlIdx !== -1 && summaryIdx !== -1)
+      ? text.slice(addlIdx + 'Additional Opportunities:'.length, summaryIdx).trim()
+      : '';
+    const summary = summaryIdx !== -1 ? text.slice(summaryIdx).trim() : '';
 
     return { intro, top5, addl, summary };
   }
@@ -195,22 +197,25 @@ export default function Home() {
   // Helper to parse numbered lists into [{title, desc}]
   function parseList(block: string) {
     if (!block) return [];
-    // Always split on lines that start with a number and a period, parenthesis, or dash, with optional spaces
-    const items = block.split(/\n\s*\d+[\.|\)|-]\s*/).filter(Boolean);
-    return items.map(item => {
-      const dashIdx = item.indexOf(' - ');
-      const colonIdx = item.indexOf(': ');
-      const splitIdx = (dashIdx !== -1 && (colonIdx === -1 || dashIdx < colonIdx)) ? dashIdx : colonIdx;
-      const sep = (dashIdx !== -1 && (colonIdx === -1 || dashIdx < colonIdx)) ? ' - ' : (colonIdx !== -1 ? ': ' : '');
-      if (splitIdx !== -1) {
-        return {
-          title: item.slice(0, splitIdx).trim(),
-          desc: item.slice(splitIdx + sep.length).trim(),
-        };
-      } else {
-        return { title: item.trim(), desc: '' };
-      }
-    });
+    // Split on newlines, filter out empty lines and lines that are just numbers
+    return block
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !/^[0-9]+[.)-]?$/.test(line))
+      .map(item => {
+        const dashIdx = item.indexOf(' - ');
+        const colonIdx = item.indexOf(': ');
+        const splitIdx = (dashIdx !== -1 && (colonIdx === -1 || dashIdx < colonIdx)) ? dashIdx : colonIdx;
+        const sep = (dashIdx !== -1 && (colonIdx === -1 || dashIdx < colonIdx)) ? ' - ' : (colonIdx !== -1 ? ': ' : '');
+        if (splitIdx !== -1) {
+          return {
+            title: item.slice(0, splitIdx).trim(),
+            desc: item.slice(splitIdx + sep.length).trim(),
+          };
+        } else {
+          return { title: item.trim(), desc: '' };
+        }
+      });
   }
 
   // Styles
