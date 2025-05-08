@@ -172,6 +172,8 @@ export default function Home() {
     const addlIdx = text.indexOf('Additional Opportunities:');
     const summaryIdx = text.indexOf('Summary:');
 
+    // Introduction is everything before Top 5
+    const intro = top5Idx !== -1 ? text.slice(0, top5Idx).trim() : '';
     // Top 5 is everything between Top 5 and Additional Opportunities
     const top5 = (top5Idx !== -1 && addlIdx !== -1) ? text.slice(top5Idx + 'Top 5 Recommendations:'.length, addlIdx).trim() : '';
     // Additional is everything between Additional Opportunities and Summary
@@ -179,7 +181,7 @@ export default function Home() {
     // Summary is everything after Summary:
     const summary = summaryIdx !== -1 ? text.slice(summaryIdx + 'Summary:'.length).trim() : '';
 
-    return { top5, addl, summary };
+    return { intro, top5, addl, summary };
   }
 
   // Helper to parse numbered lists into [{title, desc}]
@@ -477,12 +479,15 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             {/* Simple split-based rendering */}
             {lastRawAI && (() => {
-              const { top5, addl, summary: closing } = splitSummarySections(lastRawAI);
+              const { intro, top5, addl, summary: closing } = splitSummarySections(lastRawAI);
               const top5List = parseList(top5);
               const addlList = parseList(addl);
               getShareContent(top5List, addlList, profile, quiz);
               return (
                 <div className="flex flex-col gap-6">
+                  {intro && (
+                    <div className="text-base text-gray-900 mb-4 whitespace-pre-line">{intro}</div>
+                  )}
                   <div>
                     <div className="text-xl font-bold text-blue-800 mb-3">Top 5 Recommendations</div>
                     <div className="grid gap-4">
