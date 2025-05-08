@@ -10,8 +10,6 @@ async function getOpenAISummary(profile: Record<string, unknown>, quiz: Record<s
   // Compose a prompt for the AI
   const prompt = `You are an EO Member Engagement Guide. Given the following member profile and quiz answers, recommend the top 10 EO opportunities (from the provided list) that would be most valuable for this member. Structure your response as follows:
 
-Hi [name],
-
 [Introduction paragraph]
 
 Top 5 Recommendations:
