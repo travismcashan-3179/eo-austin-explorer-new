@@ -29,6 +29,8 @@ Additional Opportunities:
 Summary:
 [Conclusion paragraph]
 
+In the introduction paragraph, speak directly to the member (use "you" and "your"), but do not include a greeting such as "Hi [name],".
+
 Be specific and reference the features by name. Use the EO features list below for your recommendations. Do not include any other sections or text outside this structure.
 
 Profile: ${JSON.stringify(profile, null, 2)}
