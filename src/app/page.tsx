@@ -70,18 +70,23 @@ const loadingSteps = [
 // Step labels for progress indicator
 const stepLabels = ["Profile", "Quiz", "Results"];
 
-// Helper to get details for a feature by name
-function getFeatureDetails(name: string) {
-  const feature = eoFeatures.find(f => f.name.toLowerCase() === name.toLowerCase());
-  return feature?.details || null;
-}
-
 // Helper to remove AI greeting from intro
 function stripGreeting(intro: string, name: string) {
   // Remove 'Hi Travis,', 'Hello Travis,', 'Hi, Travis,' etc. (case-insensitive, optional punctuation)
   if (!name) return intro;
   const pattern = new RegExp(`^(hi|hello)[,\s]+${name}[,\s!]*`, 'i');
   return intro.replace(pattern, '').trim();
+}
+
+function normalize(str: string) {
+  // Remove leading numbers, punctuation, and whitespace, then lowercase and trim
+  return str.replace(/^[0-9]+[.)-]?\s*/, '').trim().toLowerCase();
+}
+
+function getFeatureDetails(name: string) {
+  const normName = normalize(name);
+  const feature = eoFeatures.find(f => normalize(f.name) === normName);
+  return feature?.details || null;
 }
 
 export default function Home() {
