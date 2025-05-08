@@ -492,9 +492,12 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             {/* Simple split-based rendering */}
             {lastRawAI && (() => {
+              console.log('RAW AI:', lastRawAI);
               const { intro, top5, addl, summary: closing } = splitSummarySections(lastRawAI);
+              console.log('ADDLS BLOCK:', addl);
               const top5List = parseList(top5);
               const addlList = parseList(addl);
+              console.log('PARSED ADDLS:', addlList);
               getShareContent(top5List, addlList, profile, quiz);
               return (
                 <div className="flex flex-col gap-6">
