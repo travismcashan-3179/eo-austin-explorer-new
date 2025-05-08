@@ -76,6 +76,14 @@ function getFeatureDetails(name: string) {
   return feature?.details || null;
 }
 
+// Helper to remove AI greeting from intro
+function stripGreeting(intro: string, name: string) {
+  // Remove 'Hi Travis,', 'Hello Travis,', 'Hi, Travis,' etc. (case-insensitive, optional punctuation)
+  if (!name) return intro;
+  const pattern = new RegExp(`^(hi|hello)[,\s]+${name}[,\s!]*`, 'i');
+  return intro.replace(pattern, '').trim();
+}
+
 export default function Home() {
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState({ name: "", company: "", revenue: "" });
@@ -486,7 +494,7 @@ export default function Home() {
               return (
                 <div className="flex flex-col gap-6">
                   {intro && (
-                    <div className="text-base text-gray-900 mb-4 whitespace-pre-line">{intro}</div>
+                    <div className="text-base text-gray-900 mb-4 whitespace-pre-line">{stripGreeting(intro, profile.name)}</div>
                   )}
                   <div>
                     <div className="text-xl font-bold text-blue-800 mb-3">Top 5 Recommendations</div>
